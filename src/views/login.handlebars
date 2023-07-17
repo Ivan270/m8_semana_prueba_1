@@ -1,0 +1,112 @@
+<div class='login-page bg-light'>
+	<div class='container'>
+		<div class='row'>
+			<div class='col-lg-10 offset-lg-1'>
+				<h3 class='mb-3'>Ingresa a tu cuenta</h3>
+				<div class='bg-white shadow rounded'>
+					<div class='row'>
+						<div class='col-md-7 pe-0'>
+							<div class='form-left h-100 py-5 px-5'>
+								<form action='' class='row g-4' id="formLogin">
+									<div class='col-12'>
+										<label>Email <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-person-fill'
+												></i></div>
+											<input
+												type='email'
+												required
+												id='loginEmail'
+												class='form-control'
+												name='email'
+												placeholder='Email'
+											/>
+										</div>
+									</div>
+
+									<div class='col-12'>
+										<label>Password <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-lock-fill'
+												></i></div>
+											<input
+												type='password'
+												required
+												id='loginPassword'
+												name='password'
+												class='form-control'
+												placeholder='Enter Password'
+											/>
+										</div>
+									</div>
+									<div class='ms-auto col-sm-6'>
+										<a href='/registro' class='float-end text-primary'>¿No
+											tienes cuenta?</a>
+									</div>
+
+									<div class='d-grid col-12'>
+										<button
+											type='submit'
+											class='btn btn-primary px-4 float-end mt-4'
+										>Ingresar</button>
+									</div>
+								</form>
+
+							</div>
+						</div>
+						<div class='col-md-5 ps-0 d-none d-md-block'>
+							<div
+								class='form-right h-100 bg-primary text-white text-center d-flex flex-column justify-content-center'
+							>
+								<i class='bi bi-bootstrap'></i>
+								<h2 class='fs-1'>¡Bienvenido!</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+    const formLogin = document.getElementById('formLogin');
+    formLogin.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": loginEmail.value,
+            "password": loginPassword.value
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        // Verificar que link quede asi para que sirva en servidor remoto
+        fetch("/api/v1/usuarios/login", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if(result.code == 200){
+                    alert(result.message);
+
+                    // hacer persistir token en localstorage
+                    localStorage.setItem('token', result.token);
+                    location.href='/'
+                } else {
+                    alert(result.message)
+                }
+            })
+            .catch(error => console.log('error', error));
+    })
+</script>

@@ -1,0 +1,165 @@
+<div class='login-page bg-light'>
+	<div class='container'>
+		<div class='row'>
+			<div class='col-lg-10 offset-lg-1'>
+				<div class='bg-white shadow rounded'>
+					<div class='row'>
+						<div class='col-md-7 pe-0'>
+							<div class='form-left h-100 py-5 px-5'>
+								<form action='' class='row g-4' id="formRegistro">
+									<div class='col-12'>
+										<label>Nombre <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-person-fill'
+												></i></div>
+											<input
+												type='nombre'
+												required
+												id='registroNombre'
+												class='form-control'
+												name='nombre'
+												placeholder='Nombre'
+											/>
+										</div>
+									</div>
+									<div class='col-12'>
+										<label>RUT <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-person-fill'
+												></i></div>
+											<input
+												type='text'
+												required
+												id='registroRut'
+												class='form-control'
+												name='rut'
+												placeholder='1.234.567-8'
+											/>
+										</div>
+									</div>
+									<div class='col-12'>
+										<label>Email <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-person-fill'
+												></i></div>
+											<input
+												type='email'
+												required
+												id='registroEmail'
+												class='form-control'
+												name='email'
+												placeholder='Email'
+											/>
+										</div>
+									</div>
+
+									<div class='col-12'>
+										<label>Password <span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-lock-fill'
+												></i></div>
+											<input
+												type='password'
+												required
+												id='registroPassword'
+												name='password'
+												class='form-control'
+												placeholder='Enter Password'
+											/>
+										</div>
+									</div>
+									<div class='col-12'>
+										<label>Confirmar Password
+											<span class='text-danger'>*</span></label>
+										<div class='input-group'>
+											<div class='input-group-text'><i
+													class='bi bi-lock-fill'
+												></i></div>
+											<input
+												type='password'
+												required
+												id='confirmPassword'
+												name='confirmPassword'
+												class='form-control'
+												placeholder='Confirme Password'
+											/>
+										</div>
+									</div>
+
+									<div class='ms-auto col-sm-6'>
+										<a href='/login' class='float-end text-primary'>¿Ya tienes
+											cuenta?</a>
+									</div>
+
+									<div class='d-grid col-12'>
+										<button
+											type='submit'
+											class='btn btn-primary px-4 float-end mt-4'
+										>Registrar cuenta</button>
+									</div>
+								</form>
+
+							</div>
+						</div>
+						<div class='col-md-5 ps-0 d-none d-md-block'>
+							<div
+								class='form-right h-100 bg-dark text-white text-center d-flex flex-column justify-content-center'
+							>
+								<i class='bi bi-bootstrap'></i>
+								<h2 class='fs-1'>¡Registra tu nueva Cuenta!</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+    const formRegistro = document.getElementById('formRegistro');
+    formRegistro.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        
+        if(confirmPassword.value != registroPassword.value){
+            return alert("Contraseñas no coinciden")
+        }
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "nombre": registroNombre.value,
+            "rut": registroRut.value,
+            "email": registroEmail.value,
+            "password": registroPassword.value
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/api/v1/usuarios/", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if(result.code == 201){
+                    alert(result.message);
+                    // redireccionamiento
+                    formRegistro.reset();
+                    location.href='/';
+                } else {
+                    alert(result.message)
+                }
+            })
+            .catch(error => console.log('error', error));
+    });
+
+    
+</script>
